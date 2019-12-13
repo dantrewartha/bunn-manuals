@@ -1,0 +1,20 @@
+{
+  "name": "bunn-manuals",
+  "version": "1.0.0",
+  "description": "My phenomenal Nuxt.js project",
+  "author": "BUNN Digital",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "nuxt": "^2.0.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^1.0.0"
+  }
+}
