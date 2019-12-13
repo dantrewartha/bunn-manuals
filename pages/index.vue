@@ -6,7 +6,7 @@
       <div class="p-6 bg-gray-100 border ">
         <div class="relative">
           <input type="text" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700" placeholder="Search by material number or product description and press enter ⏎" v-model.lazy="search" />
-          <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" v-on:click="getDocs()">
+          <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" v-on:click="getDocs()" v-if="search.length">
             <i class="fas fa-times-circle"></i>
           </button>
         </div>
@@ -49,6 +49,7 @@ export default {
   methods: {
     getDocs: function() {
       var vm = this;
+      vm.search = '';
       axios.get(process.env.apiUrl + '/docs').then(function(response) {
         vm.docs = response.data;
       })
