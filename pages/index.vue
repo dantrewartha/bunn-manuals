@@ -3,23 +3,71 @@
     <div class="w-full">
       <logo />
       <h1 class="font-sans-light text-lg-3 my-8">Product Manuals</h1>
-      <div class="p-6 bg-gray-100 border ">
-        <div class="relative">
+      <div class="flex p-6 bg-gray-100 border ">
+        <div class="relative w-full md:w-2/3">
           <input type="text" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700" placeholder="Search by material number or product description and press enter ⏎" v-model.lazy="search" />
-          <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" v-on:click="getDocs()" v-if="search.length">
+          <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" v-on:click="findDocs(search, type, lang)" v-if="search.length">
             <i class="fas fa-times-circle"></i>
           </button>
         </div>
+        <div class="w-full md:w-1/3 px-3">
+          <div class="relative">
+            <select class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded focus:outline-none" id="language" v-model="type"  @change="findDocs(search, type, lang)">
+              <option value="Cleaning Card">Cleaning Card</option>
+              <option value="Illustrated Parts">Illustrated Parts</option>
+              <option value="Insert/Supplement">Insert/Supplement</option>
+              <option value="Installation and Operating" selected>Installation and Operating</option>
+              <option value="Instruction">Instruction</option>
+              <option value="Programming">Programming</option>
+              <option value="Service and Repair">Service and Repair</option>
+              <option value="Use and Care">Use and Care</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="w-full md:w-1/6">
+          <div class="relative">
+            <select class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded focus:outline-none" id="language" v-model="lang"  @change="findDocs(search, type, lang)">
+              <option value="AR">Arabic</option>
+              <option value="ZH">Chinese</option>
+              <option value="ZF">Chinese Traditional</option>
+              <option value="CS">Czech</option>
+              <option value="DA">Danish</option>
+              <option value="DE">German</option>
+              <option value="EN" selected>English</option>
+              <option value="FN">Finnish</option>
+              <option value="FC">French (canadian)</option>
+              <option value="FR">French (eu)</option>
+              <option value="IT">Italian</option>
+              <option value="JA">Japanese</option>
+              <option value="KO">Korean</option>
+              <option value="NL">Dutch</option>
+              <option value="PB">Portuguese (brazil)</option>
+              <option value="PT">Portuguese (eu)</option>
+              <option value="PL">Polish</option>
+              <option value="RU">Russian</option>
+              <option value="ES">Spanish</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+          </div>
+        </div>
       </div>
-      <dl class="flex text-sm-1 font-sans-regular" v-for="(doc, index) in docs" v-bind:key="index" :class="{'bg-gray-100': index % 2, 'bg-white': !(index % 2)}">
-         <dd class="py-3 px-4 w-1/6">{{ doc.productNumber }}</dd> 
-         <dd class="py-3 px-4 w-1/3 text-left">{{ doc.description }}</dd> 
-         <dd class="py-3 px-4 w-1/3">
-            <a v-bind:href="doc.pdfUrl" class="text-brand-primary hover:underline" target="_blank">{{ doc.manualType }}</a>
-          </dd> 
-         <dd class="py-3 px-4 w-12">{{ doc.language }}</dd> 
-      </dl>
+      <div v-if="docs.length > 1">
+        <dl class="flex text-sm-1 font-sans-regular" v-for="(doc, index) in docs" v-bind:key="index" :class="{'bg-gray-100': index % 2, 'bg-white': !(index % 2)}">
+          <dd class="py-3 px-4 w-1/6">{{ doc.productNumber }}</dd> 
+          <dd class="py-3 px-4 w-2/5 text-left">{{ doc.description }}</dd> 
+          <dd class="py-3 px-4 w-1/4">
+              <a v-bind:href="doc.pdfUrl" class="text-brand-primary hover:underline" target="_blank">{{ doc.manualType }}</a>
+            </dd> 
+          <dd class="py-3 px-4 flex-grow">{{ doc.language }}</dd> 
+        </dl>
+      </div>
 
+      <div v-else class="py-12">No results found</div>
     </div>
   </div>
 </template>
@@ -34,13 +82,17 @@ export default {
     return {
       name: 'Home',
       search: '',
+      lang: 'EN',
+      type: 'Installation and Operating',
       docs: [],
+      postBody: ['test', 'hello'],
     }
   },
   watch: {
     search: function (newValue, oldValue) {
+      var vm = this;
       if (newValue !== oldValue && newValue.length) {
-        this.findDocs(newValue);
+        this.findDocs(newValue, vm.type, vm.lang);
       } else if (!newValue.length) {
         this.getDocs();
       }
@@ -54,13 +106,18 @@ export default {
         vm.docs = response.data;
       })
     },
-    findDocs: function(query) {
+    findDocs: function(query, type, lang) {
       var vm = this;
-      axios.get(process.env.apiUrl + '/docs/find/' + query).then(function(response){
-        if (response.data) {
-          vm.docs = response.data;
-        }
-      })
+      if (query.length) {
+        axios.post(process.env.apiUrl + '/docs/' + type + '/' + lang + '/' + query, {
+          data: vm.postBody
+        })
+        .then(function(response){
+          if (response.data) {
+            vm.docs = response.data;
+          }
+        })
+      }
     },
   },
   mounted: function () {
