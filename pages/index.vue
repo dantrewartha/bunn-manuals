@@ -108,8 +108,10 @@ export default {
     findDocs: function(query, type, lang) {
       var vm = this;
       if (query.length) {
-        axios.post(process.env.apiUrl + '/docs/' + type + '/' + lang + '/' + query, {
-          // data: vm.postBody
+        axios.post(process.env.apiUrl + '/docs', {
+          query: query,
+          manualType: type, 
+          language: lang,
         })
         .then(function(response){
           if (response.data) {
