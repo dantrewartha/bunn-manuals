@@ -56,7 +56,7 @@
           </div>
         </div>
       </div>
-      <div v-if="docs.length > 1">
+      <div v-if="docs.length">
         <dl class="flex text-sm-1 font-sans-regular" v-for="(doc, index) in docs" v-bind:key="index" :class="{'bg-gray-100': index % 2, 'bg-white': !(index % 2)}">
           <dd class="py-3 px-4 w-1/6">{{ doc.productNumber }}</dd> 
           <dd class="py-3 px-4 w-2/5 text-left">{{ doc.description }}</dd> 
@@ -85,7 +85,6 @@ export default {
       lang: 'EN',
       type: 'Installation and Operating',
       docs: [],
-      postBody: ['test', 'hello'],
     }
   },
   watch: {
@@ -110,11 +109,12 @@ export default {
       var vm = this;
       if (query.length) {
         axios.post(process.env.apiUrl + '/docs/' + type + '/' + lang + '/' + query, {
-          data: vm.postBody
+          // data: vm.postBody
         })
         .then(function(response){
           if (response.data) {
             vm.docs = response.data;
+            console.log(response.data);
           }
         })
       }
