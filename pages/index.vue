@@ -4,28 +4,29 @@
       <logo />
       <h1 class="font-sans-light text-lg-3 my-8">Product Manuals</h1>
       <div class="flex p-6 bg-gray-100 border ">
-        <div class="relative w-full md:w-2/3">
+        <div class="relative w-full w-auto">
           <input type="text" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700" placeholder="Search by material number or product description and press enter ⏎" v-model.lazy="search" />
-          <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" v-on:click="findDocs(search, type, lang)" v-if="search.length">
+          <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" @click="clearSearch()" v-if="search.length">
             <i class="fas fa-times-circle"></i>
           </button>
         </div>
-        <div class="w-full md:w-1/3 px-3">
-          <div class="relative">
-              <button class="bg-white border border-gray-200 text-left w-full p-3 text-gray-700 appearance-none focus:outline-none truncate" v-on:click="isOpen = !isOpen">
-                <span v-for="(item, index) in type" v-bind:key="index">{{item}}</span><span v-if="type.length == 0">Select a type</span>
-              </button>
-              <ul class="bg-white p-4 text-left absolute w-full rounded border border-gray-200 text-gray-700" v-if="isOpen">
-                <li class="bg-gray-100 px-3 py-2 border-b border-r border-l border-gray-200 flex items-center leading-none text-sm-1" v-for="(doc, index) in manualTypes" v-bind:key="index" v-bind:class="{ 'border-t': index === 0 }">
-                  <label class="cursor-pointer"><input type="checkbox" v-bind:value="doc" class="mr-2" v-model="type" @change="findDocs" />{{doc}}</label>
-                </li>
-              </ul>
+        <div class="w-full max-w-xs px-3">
+          <div class="relative" v-on:click="inside" v-click-outside="outside">
+            <button class="bg-white border border-gray-200 rounded text-left w-full p-3 pr-8 text-gray-700 appearance-none focus:outline-none truncate">
+              <span v-for="(item, index) in type" v-bind:key="index">{{item}}<span v-if="index != type.length -1">, </span></span>
+              <span v-if="type.length == 0">Select a manual type</span>
+            </button>
+            <ul class="bg-white p-4 text-left absolute w-full rounded border border-gray-200 text-gray-700" v-if="isOpen">
+              <li class="bg-gray-100 px-3 py-2 border-b border-r border-l border-gray-200 flex items-center leading-none text-sm-1" v-for="(doc, index) in manualTypes" v-bind:key="index" v-bind:class="{ 'border-t': index === 0 }">
+                <label class="cursor-pointer"><input type="checkbox" v-bind:value="doc" class="mr-2" v-model="type" @change="findDocs(search, type, lang)" />{{doc}}</label>
+              </li>
+            </ul>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
               <svg class="fill-current h-4 w-4" v-bind:class="{ 'rotate': isOpen }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
           </div>
         </div>
-        <div class="w-full md:w-1/6">
+        <div class="w-full md:w-84">
           <div class="relative">
             <select class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded focus:outline-none" id="language" v-model="lang"  @change="findDocs(search, type, lang)">
               <option value="AR">Arabic</option>
@@ -52,6 +53,9 @@
               <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
           </div>
+        </div>
+        <div>
+          <button class="p-3 px-4 bg-brand-primary text-white ml-3 rounded appearance-none focus:outline-none" v-on:click="findDocs(search, type, lang)">Go</button>
         </div>
       </div>
       <div v-if="docs.length">
@@ -84,6 +88,8 @@ export default {
       manualTypes: ['Cleaning Card','Illustrated Parts','Insert/Supplement','Installation and Operating','Instruction','Programming','Service and Repair','Use and Care'],
       docs: [],
       isOpen: false,
+      clickOutside: 0,
+      clickInside: 0,
     }
   },
   watch: {
@@ -115,18 +121,49 @@ export default {
         .then(function(response){
           if (response.data) {
             vm.docs = response.data;
-            console.log(response.data);
           }
         })
       }
     },
-    logArray: function(doc) {
-      var vm = this;
-      console.log(vm.type);
+    clearSearch: function() {
+      this.search = '';
     },
+    outside: function(e) {
+      this.isOpen = false;
+    },
+    inside: function(e) {
+      this.isOpen = true;
+    }
   },
   mounted: function () {
     this.getDocs();
+  },
+  directives: {
+    'click-outside': {
+      bind: function(el, binding, vNode) {
+        if (typeof binding.value !== 'function') {
+        	const compName = vNode.context.name
+          let warn = `[Vue-click-outside:] provided expression '${binding.expression}' is not a function, but has to be`
+          if (compName) { warn += `Found in component '${compName}'` }
+          
+          console.warn(warn)
+        }
+        const bubble = binding.modifiers.bubble
+        const handler = (e) => {
+          if (bubble || (!el.contains(e.target) && el !== e.target)) {
+          	binding.value(e)
+          }
+        }
+        el.__vueClickOutside__ = handler
+        document.addEventListener('click', handler)
+			},
+      
+      unbind: function(el, binding) {
+        document.removeEventListener('click', el.__vueClickOutside__)
+        el.__vueClickOutside__ = null
+
+      }
+    }
   }
 }
 </script>
