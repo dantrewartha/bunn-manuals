@@ -5,7 +5,7 @@
       <h1 class="font-sans-light text-lg-3 my-8">Product Manuals</h1>
       <div class="flex p-6 bg-gray-100 border ">
         <div class="relative w-full w-auto">
-          <input type="text" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700" placeholder="Search by material number or product description and press enter ⏎" v-model.lazy="search" />
+          <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700" placeholder="Search by material number or product description and press enter ⏎" v-model.lazy="search" />
           <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" @click="clearSearch()" v-if="search.length">
             <i class="fas fa-times-circle"></i>
           </button>
@@ -54,9 +54,6 @@
             </div>
           </div>
         </div>
-        <div class="hidden">
-          <button class="p-3 px-4 bg-brand-primary text-white ml-3 rounded appearance-none focus:outline-none" v-on:click="findDocs(search, type, lang)">Go</button>
-        </div>
       </div>
       <div v-if="docs.length">
         <dl class="flex text-sm-1 font-sans-regular" v-for="(doc, index) in docs" v-bind:key="index" :class="{'bg-gray-100': index % 2, 'bg-white': !(index % 2)}">
@@ -84,7 +81,7 @@ export default {
       name: 'Home',
       search: '',
       lang: 'EN',
-      type: ['Installation and Operating'],
+      type: ['Illustrated Parts'],
       manualTypes: ['Cleaning Card','Illustrated Parts','Insert/Supplement','Installation and Operating','Instruction','Programming','Service and Repair','Use and Care'],
       docs: [],
       isOpen: false,
@@ -103,7 +100,7 @@ export default {
     },
   },
   methods: {
-    getDocs: function() {
+    getDocs: function(type, lang) {
       var vm = this;
       vm.search = '';
       axios.get(process.env.apiUrl + '/docs').then(function(response) {
@@ -126,6 +123,7 @@ export default {
       }
     },
     clearSearch: function() {
+      var vm = this;
       this.search = '';
     },
     outside: function(e) {
@@ -137,33 +135,7 @@ export default {
   },
   mounted: function () {
     this.getDocs();
-  },
-  directives: {
-    'click-outside': {
-      bind: function(el, binding, vNode) {
-        if (typeof binding.value !== 'function') {
-        	const compName = vNode.context.name
-          let warn = `[Vue-click-outside:] provided expression '${binding.expression}' is not a function, but has to be`
-          if (compName) { warn += `Found in component '${compName}'` }
-          
-          console.warn(warn)
-        }
-        const bubble = binding.modifiers.bubble
-        const handler = (e) => {
-          if (bubble || (!el.contains(e.target) && el !== e.target)) {
-          	binding.value(e)
-          }
-        }
-        el.__vueClickOutside__ = handler
-        document.addEventListener('click', handler)
-			},
-      
-      unbind: function(el, binding) {
-        document.removeEventListener('click', el.__vueClickOutside__)
-        el.__vueClickOutside__ = null
-
-      }
-    }
+    document.getElementById("searchInput").focus();
   }
 }
 </script>
@@ -196,6 +168,9 @@ export default {
   height:40px;
   background: rgb(255,255,255);
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(247,247,247,1) 100%);
+}
+button:disabled {
+  opacity: .7;
 }
 
 </style>
