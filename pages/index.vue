@@ -12,18 +12,16 @@
         </div>
         <div class="w-full md:w-1/3 px-3">
           <div class="relative">
-            <select class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded focus:outline-none" id="language" v-model="type"  @change="findDocs(search, type, lang)">
-              <option value="Cleaning Card">Cleaning Card</option>
-              <option value="Illustrated Parts">Illustrated Parts</option>
-              <option value="Insert/Supplement">Insert/Supplement</option>
-              <option value="Installation and Operating" selected>Installation and Operating</option>
-              <option value="Instruction">Instruction</option>
-              <option value="Programming">Programming</option>
-              <option value="Service and Repair">Service and Repair</option>
-              <option value="Use and Care">Use and Care</option>
-            </select>
+              <button class="bg-white border border-gray-200 text-left w-full p-3 text-gray-700 appearance-none focus:outline-none truncate" v-on:click="isOpen = !isOpen">
+                <span v-for="(item, index) in type" v-bind:key="index">{{item}}</span><span v-if="type.length == 0">Select a type</span>
+              </button>
+              <ul class="bg-white p-4 text-left absolute w-full rounded border border-gray-200 text-gray-700" v-if="isOpen">
+                <li class="bg-gray-100 px-3 py-2 border-b border-r border-l border-gray-200 flex items-center leading-none text-sm-1" v-for="(doc, index) in manualTypes" v-bind:key="index" v-bind:class="{ 'border-t': index === 0 }">
+                  <label class="cursor-pointer"><input type="checkbox" v-bind:value="doc" class="mr-2" v-model="type" @change="findDocs" />{{doc}}</label>
+                </li>
+              </ul>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+              <svg class="fill-current h-4 w-4" v-bind:class="{ 'rotate': isOpen }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
           </div>
         </div>
@@ -66,7 +64,6 @@
           <dd class="py-3 px-4 flex-grow">{{ doc.language }}</dd> 
         </dl>
       </div>
-
       <div v-else class="py-12">No results found</div>
     </div>
   </div>
@@ -83,8 +80,10 @@ export default {
       name: 'Home',
       search: '',
       lang: 'EN',
-      type: 'Installation and Operating',
+      type: ['Installation and Operating'],
+      manualTypes: ['Cleaning Card','Illustrated Parts','Insert/Supplement','Installation and Operating','Instruction','Programming','Service and Repair','Use and Care'],
       docs: [],
+      isOpen: false,
     }
   },
   watch: {
@@ -121,6 +120,10 @@ export default {
         })
       }
     },
+    logArray: function(doc) {
+      var vm = this;
+      console.log(vm.type);
+    },
   },
   mounted: function () {
     this.getDocs();
@@ -134,6 +137,9 @@ export default {
   @apply min-h-screen flex justify-center items-center text-center mx-auto;
 }
 */
+.rotate {
+  transform: rotate(180deg);
+}
 .container {
   margin: 0 auto;
   min-height: 100vh;
