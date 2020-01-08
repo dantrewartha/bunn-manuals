@@ -54,7 +54,7 @@
             </div>
           </div>
         </div>
-        <div>
+        <div class="hidden">
           <button class="p-3 px-4 bg-brand-primary text-white ml-3 rounded appearance-none focus:outline-none" v-on:click="findDocs(search, type, lang)">Go</button>
         </div>
       </div>
