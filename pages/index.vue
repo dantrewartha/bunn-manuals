@@ -6,10 +6,10 @@
       <div class="flex p-6 pt-3 bg-gray-100 border">
 
 
-        <div class="relative w-full w-auto">
+        <div class="w-full w-auto">
           <label class="form-label">Search query</label>
-          <div>
-            <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700" placeholder="Search by material number or product description and press enter ⏎" v-model="search" />
+          <div class="relative">
+            <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700" placeholder="Search by material number or product description and press enter ⏎" v-model.trim="search" />
             <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" @click="clearSearch()" v-if="search.length">
               <i class="fas fa-times-circle"></i>
             </button>
@@ -101,7 +101,7 @@ export default {
       var vm = this;
       if (query.length > 2) {
         axios.post(process.env.apiUrl + '/docs', {
-          query: query.trim(),
+          query: query,
           manualType: type, 
           language: lang,
         })
@@ -124,7 +124,6 @@ export default {
     },
   },
   mounted: function () {
-    // this.getDocs();
     document.getElementById("searchInput").focus();
   }
 }
