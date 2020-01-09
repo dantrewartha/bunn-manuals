@@ -63,7 +63,8 @@
           <dd class="py-3 px-4 flex-grow">{{ doc.language }}</dd> 
         </dl>
       </div>
-      <div v-if="noResults" class="py-12">No results found</div>
+      <div v-if="noResults && type.length" class="py-12">No results found</div>
+      <div v-if="noResults && !type.length" class="py-12">Please select a manual type</div>
     </div>
   </div>
 </template>
