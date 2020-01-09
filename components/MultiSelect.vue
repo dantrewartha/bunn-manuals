@@ -36,7 +36,7 @@ export default {
     },
     select: function() {
       this.$emit('select', this.selected);
-    },
+    }
   },
 }
 </script>

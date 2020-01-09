@@ -9,7 +9,7 @@
         <div class="w-full w-auto">
           <label class="form-label">Search query</label>
           <div class="relative">
-            <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700" placeholder="Search by material number or product description and press enter ⏎" v-model.trim="search" />
+            <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700" placeholder="Search by material number or product description" v-model.trim="search" />
             <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" @click="clearSearch()" v-if="search.length">
               <i class="fas fa-times-circle"></i>
             </button>
@@ -53,7 +53,7 @@
           </div>
         </div>
       </div>
-      <div v-if="docs.length">
+      <div v-if="docs.length" class="fade-in">
         <dl class="flex text-sm-1 font-sans-regular" v-for="(doc, index) in docs" v-bind:key="index" :class="{'bg-gray-100': index % 2, 'bg-white': !(index % 2)}">
           <dd class="py-3 px-4 w-1/6">{{ doc.productNumber }}</dd> 
           <dd class="py-3 px-4 w-2/5 text-left">{{ doc.description }}</dd> 
@@ -63,8 +63,8 @@
           <dd class="py-3 px-4 flex-grow">{{ doc.language }}</dd> 
         </dl>
       </div>
-      <div v-if="noResults && type.length" class="py-12">No results found</div>
-      <div v-if="noResults && !type.length" class="py-12">Please select a manual type</div>
+      <div v-if="noResults && type.length" class="py-12 fade-in">No results found</div>
+      <div v-if="noResults && !type.length" class="py-12 fade-in">Please select a manual type</div>
     </div>
   </div>
 </template>
@@ -146,15 +146,15 @@ export default {
 .form-label {
   @apply uppercase tracking-wider text-left text-gray-500 font-sans-demi text-sm-2 p-1 block;
 }
-.scroll-box::after {
-  content:'';
-  position:absolute;
-  background: lime;
-  bottom:0;
-  left:0;
-  width:100%;
-  height:40px;
-  background: rgb(255,255,255);
-  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(247,247,247,1) 100%);
+.fade-in {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-timing-function: ease-in;
+	animation-duration: .2s;
+}
+
+@keyframes fadeInOpacity {
+	0% { opacity: 0; }
+	100% { opacity: 1; }
 }
 </style>
