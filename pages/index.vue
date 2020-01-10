@@ -23,32 +23,11 @@
         </div>
         <div class="w-full md:w-84">
           <label class="form-label">Language</label>
-          <div class="relative">
-            <select class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded focus:outline-none set-height" id="language" v-model="lang"  @change="findDocs(search, type, lang)">
-              <option value="AR">Arabic</option>
-              <option value="ZH">Chinese</option>
-              <option value="ZF">Chinese Traditional</option>
-              <option value="CS">Czech</option>
-              <option value="DA">Danish</option>
-              <option value="DE">German</option>
-              <option value="EN" selected>English</option>
-              <option value="FN">Finnish</option>
-              <option value="FC">French (canadian)</option>
-              <option value="FR">French (eu)</option>
-              <option value="IT">Italian</option>
-              <option value="JA">Japanese</option>
-              <option value="KO">Korean</option>
-              <option value="NL">Dutch</option>
-              <option value="PB">Portuguese (brazil)</option>
-              <option value="PT">Portuguese (eu)</option>
-              <option value="PL">Polish</option>
-              <option value="RU">Russian</option>
-              <option value="ES">Spanish</option>
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-            </div>
-          </div>
+          <radio-select 
+            v-bind:list-data="languages"
+            v-bind:default="defaultLanguage"
+            @select="updateLang">
+          </radio-select>
         </div>
       </div>
       <div v-if="docs.length" class="fade-in">
@@ -61,8 +40,8 @@
           <dd class="py-3 px-4 flex-grow">{{ doc.language }}</dd> 
         </dl>
       </div>
-      <div v-if="noResults && type.length" class="py-12 fade-in">No results found</div>
-      <div v-if="noResults && !type.length" class="py-12 fade-in">Please select a manual type</div>
+      <div v-if="zeroResults" class="py-12 fade-in">No results found</div>
+      <div v-if="noManualTypeSelected" class="py-12 fade-in">Please select a manual type</div>
       <div v-if="showSpinner" class="py-12 fade-in flex items-center justify-center text-gray-400">
         <svg class="spinner stroke-current" width="28px" height="28px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
            <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
@@ -75,10 +54,11 @@
 <script>
 import Logo from '~/components/Logo.vue';
 import MultiSelect from '~/components/MultiSelect.vue';
+import RadioSelect from '~/components/RadioSelect.vue';
 import axios from 'axios';
 
 export default {
-  components: { Logo, MultiSelect },
+  components: { Logo, MultiSelect, RadioSelect },
   data: function() {
     return {
       name: 'Home',
@@ -86,6 +66,28 @@ export default {
       lang: 'EN',
       type: ['Illustrated Parts'],
       manualTypes: ['Cleaning Card','Illustrated Parts','Insert/Supplement','Installation and Operating','Instruction','Programming','Service and Repair','Use and Care'],
+      languages: [
+        {'label':'Arabic','value':'AR'},
+        {'label':'Chinese','value':'ZH'},
+        {'label':'Chinese Traditional','value':'ZF'},
+        {'label':'Czech','value':'CS'},
+        {'label':'Danish','value':'DA'},
+        {'label':'German','value':'DE'},
+        {'label':'English','value':'EN'},
+        {'label':'Finnish','value':'FN'},
+        {'label':'French (canadian)','value':'FC'},
+        {'label':'French (eu)','value':'FR'},
+        {'label':'Italian','value':'IT'},
+        {'label':'Japanese','value':'JA' },
+        {'label':'Korean','value':'KO'},
+        {'label':'Dutch','value':'NL'},
+        {'label':'Portuguese (brazil)','value':'PB'},
+        {'label':'Portuguese (eu)','value':'PT'},
+        {'label':'Polish','value':'PL'},
+        {'label':'Russian','value':'RU'},
+        {'label':'Spanish','value':'ES'}
+      ],
+      defaultLanguage: {'label':'English','value':'EN'},
       docs: [],
       noResults: null,
       searching: false
@@ -94,7 +96,15 @@ export default {
   computed: {
     showSpinner: function () {
       var vm = this;
-      return vm.searching && vm.search.length
+      return vm.searching && vm.search.length;
+    },
+    zeroResults: function() {
+      var vm = this;
+      return vm.noResults && vm.type.length;
+    },
+    noManualTypeSelected: function() {
+      var vm = this;
+      return vm.noResults && !vm.type.length;
     }
   },
   watch: {
@@ -133,6 +143,11 @@ export default {
       vm.type = e;
       vm.findDocs(vm.search, vm.type, vm.lang)
     },
+    updateLang: function(e) {
+      var vm = this;
+      vm.lang = e.value;
+      vm.findDocs(vm.search, vm.type, vm.lang)
+    },
     clearSearch: function() {
       var vm = this;
       vm.search = '';
@@ -165,17 +180,10 @@ body {
   @apply py-24;
 }
 .form-label {
-  @apply uppercase tracking-wider text-left text-gray-500 font-sans-demi text-sm-2 p-1 block;
+  @apply block font-sans-demi uppercase text-gray-500 text-sm-2 tracking-wide p-1 pt-3 text-left;
 }
 .fade-in {
-	opacity: 1;
-	animation-name: fadeInOpacity;
-	animation-timing-function: ease-in;
-	animation-duration: .2s;
-}
-
-@keyframes fadeInOpacity {
-	0% { opacity: 0; }
-	100% { opacity: 1; }
+	-webkit-animation: fadein .5s linear;
+  animation: fadein .5s linear;
 }
 </style>
