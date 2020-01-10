@@ -15,6 +15,7 @@
     "nuxt": "^2.0.0"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^1.0.0"
+    "@nuxtjs/tailwindcss": "^1.0.0",
+    "bunn-design-system": "git+https://github.com/BUNN-Digital/design-system.git#v0.8.69"
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-on:click="inside" v-click-outside="outside">
-    <button class="bg-white border border-gray-200 rounded text-left w-full p-3 pr-8 text-gray-700 appearance-none focus:outline-none truncate">
+    <button class="bg-white border border-gray-200 rounded text-left w-full p-3 pr-8 text-gray-700 appearance-none focus:outline-none truncate leading-tight set-height">
       <span v-for="(item, index) in selected" v-bind:key="index">{{item}}<span v-if="index != selected.length -1">, </span></span>
       <span v-if="selected.length == 0">{{ buttonText }}</span>
     </button>
@@ -41,5 +41,4 @@ export default {
 }
 </script>
 <style scoped>
-
 </style>

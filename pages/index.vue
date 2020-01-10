@@ -4,12 +4,10 @@
       <logo />
       <h1 class="font-sans-light text-lg-3 my-8">Product Manuals</h1>
       <div class="flex p-6 pt-3 bg-gray-100 border">
-
-
         <div class="w-full w-auto">
           <label class="form-label">Search query</label>
           <div class="relative">
-            <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700" placeholder="Search by material number or product description" v-model.trim="search" />
+            <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700 set-height" placeholder="Search by material number or product description" v-model.trim="search" />
             <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" @click="clearSearch()" v-if="search.length">
               <i class="fas fa-times-circle"></i>
             </button>
@@ -26,7 +24,7 @@
         <div class="w-full md:w-84">
           <label class="form-label">Language</label>
           <div class="relative">
-            <select class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded focus:outline-none" id="language" v-model="lang"  @change="findDocs(search, type, lang)">
+            <select class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded focus:outline-none set-height" id="language" v-model="lang"  @change="findDocs(search, type, lang)">
               <option value="AR">Arabic</option>
               <option value="ZH">Chinese</option>
               <option value="ZF">Chinese Traditional</option>
@@ -58,13 +56,18 @@
           <dd class="py-3 px-4 w-1/6">{{ doc.productNumber }}</dd> 
           <dd class="py-3 px-4 w-2/5 text-left">{{ doc.description }}</dd> 
           <dd class="py-3 px-4 w-1/4">
-              <a v-bind:href="doc.pdfUrl" class="text-brand-primary hover:underline" target="_blank">{{ doc.manualType }}</a>
-            </dd> 
+            <a v-bind:href="doc.pdfUrl" class="text-brand-primary hover:underline" target="_blank">{{ doc.manualType }}</a>
+          </dd> 
           <dd class="py-3 px-4 flex-grow">{{ doc.language }}</dd> 
         </dl>
       </div>
       <div v-if="noResults && type.length" class="py-12 fade-in">No results found</div>
       <div v-if="noResults && !type.length" class="py-12 fade-in">Please select a manual type</div>
+      <div v-if="showSpinner" class="py-12 fade-in flex items-center justify-center text-gray-400">
+        <svg class="spinner stroke-current" width="28px" height="28px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+           <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+        </svg>
+      </div>
     </div>
   </div>
 </template>
@@ -85,6 +88,13 @@ export default {
       manualTypes: ['Cleaning Card','Illustrated Parts','Insert/Supplement','Installation and Operating','Instruction','Programming','Service and Repair','Use and Care'],
       docs: [],
       noResults: null,
+      searching: false
+    }
+  },
+  computed: {
+    showSpinner: function () {
+      var vm = this;
+      return vm.searching && vm.search.length
     }
   },
   watch: {
@@ -94,12 +104,15 @@ export default {
         this.findDocs(newValue, vm.type, vm.lang);
       } else if (!newValue.length < 3) {
         this.docs = [];
+        this.searching = false;
       }
     },
   },
   methods: {
     findDocs: function(query, type, lang) {
       var vm = this;
+      vm.searching = true;
+      vm.noResults = false;
       if (query.length > 2) {
         axios.post(process.env.apiUrl + '/docs', {
           query: query,
@@ -107,6 +120,7 @@ export default {
           language: lang,
         })
         .then(function(response) {
+          vm.searching = false;
           if (response.data) {
             vm.docs = response.data;
             (vm.docs.length) ? vm.noResults = false : vm.noResults = true;
@@ -121,7 +135,7 @@ export default {
     },
     clearSearch: function() {
       var vm = this;
-      this.search = '';
+      vm.search = '';
     },
   },
   mounted: function () {
@@ -131,6 +145,13 @@ export default {
 </script>
 
 <style>
+body {
+  background: white;
+  @apply text-base;
+}
+.set-height {
+  height: 46px;
+}
 .rotate {
   transform: rotate(180deg);
 }
