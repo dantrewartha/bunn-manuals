@@ -3,31 +3,38 @@
     <div class="w-full">
       <logo />
       <h1 class="font-sans-light text-lg-3 my-8">Product Manuals</h1>
-      <div class="flex p-6 pt-3 bg-gray-100 border">
-        <div class="w-full w-auto">
-          <label class="form-label">Search query</label>
-          <div class="relative">
-            <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700 set-height" placeholder="Search by material number or product description" v-model.trim="search" />
-            <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" @click="clearSearch()" v-if="search.length">
-              <i class="fas fa-times-circle"></i>
-            </button>
+      <div class="flex flex-col p-6 pt-3 bg-gray-100 border">
+        <div class="flex">
+          <div class="w-full w-auto">
+            <div class="flex">
+              <label class="form-label cursor-pointer mr-3"><input type="radio" class="mr-1" v-bind:value="allModels" @change="updateDiscontintued" v-model="status" /> All</label>
+              <label class="form-label cursor-pointer mr-3"><input type="radio" class="mr-1" v-bind:value="currentModels" @change="updateDiscontintued" v-model="status" /> Current models</label>
+              <label class="form-label cursor-pointer mr-3"><input type="radio" class="mr-1" v-bind:value="discontinuedModels" @change="updateDiscontintued" v-model="status" /> Discontinued models</label>
+            </div>
+            
+            <div class="relative">
+              <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700 set-height" placeholder="Search by material number or product description" v-model.trim="search" />
+              <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" @click="clearSearch()" v-if="search.length">
+                <i class="fas fa-times-circle"></i>
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="w-full max-w-xs px-3">
-          <label class="form-label">Manual Type(s)</label>
-          <multi-select 
-            v-bind:list-data="manualTypes" 
-            v-bind:button-text="'Select a manual type'" 
-            @select="updateTypes">
-          </multi-select>
-        </div>
-        <div class="w-full md:w-84">
-          <label class="form-label">Language</label>
-          <radio-select 
-            v-bind:list-data="languages"
-            v-bind:default="defaultLanguage"
-            @select="updateLang">
-          </radio-select>
+          <div class="w-full max-w-xs px-3">
+            <label class="form-label">Manual Type(s)</label>
+            <multi-select 
+              v-bind:list-data="manualTypes" 
+              v-bind:button-text="'Select a manual type'" 
+              @select="updateTypes">
+            </multi-select>
+          </div>
+          <div class="w-full md:w-84">
+            <label class="form-label">Language</label>
+            <radio-select 
+              v-bind:list-data="languages"
+              v-bind:default="defaultLanguage"
+              @select="updateLang">
+            </radio-select>
+          </div>
         </div>
       </div>
       <div v-if="docs.length" class="fade-in">
@@ -98,7 +105,12 @@ export default {
       defaultLanguage: {'label':'English','value':'EN'},
       docs: [],
       noResults: null,
-      searching: false
+      searching: false,
+      status: [],
+      allModels: ['RL','RC','OB','OC'],
+      currentModels: ['RL','RC'],
+      discontinuedModels: ['OB','OC'],
+      status: ['RL','RC','OB','OC'],
     }
   },
   computed: {
@@ -127,15 +139,16 @@ export default {
     },
   },
   methods: {
-    findDocs: function(query, type, lang) {
+    findDocs: function() {
       var vm = this;
       vm.searching = true;
       vm.noResults = false;
-      if (query.length > 2) {
+      if (vm.search.length > 2) {
         axios.post(process.env.apiUrl + '/docs', {
-          query: query,
-          manualType: type, 
-          language: lang,
+          query: vm.search,
+          manualType: vm.type, 
+          language: vm.lang,
+          status: vm.status,
         })
         .then(function(response) {
           vm.searching = false;
@@ -149,12 +162,17 @@ export default {
     updateTypes: function(e) {
       var vm = this;
       vm.type = e;
-      vm.findDocs(vm.search, vm.type, vm.lang)
+      vm.findDocs();
     },
     updateLang: function(e) {
       var vm = this;
       vm.lang = e.value;
-      vm.findDocs(vm.search, vm.type, vm.lang)
+      vm.findDocs();
+    },
+    updateDiscontintued: function() {
+      var vm = this;
+      console.log(vm.status);
+      vm.findDocs();
     },
     clearSearch: function() {
       var vm = this;
