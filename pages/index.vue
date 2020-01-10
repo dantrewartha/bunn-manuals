@@ -33,16 +33,24 @@
       <div v-if="docs.length" class="fade-in">
         <dl class="flex text-sm-1 font-sans-regular" v-for="(doc, index) in docs" v-bind:key="index" :class="{'bg-gray-100': index % 2, 'bg-white': !(index % 2)}">
           <dd class="py-3 px-4 w-1/6">{{ doc.productNumber }}</dd> 
-          <dd class="py-3 px-4 w-2/5 text-left">{{ doc.description }}</dd> 
+          <dd class="py-3 px-4 w-2/5 text-left">
+            {{ doc.description }}
+            <span class="text-sm-3 font-sans-demi uppercase bg-avert-light text-avert py-1 px-2 rounded-full ml-2" v-if="doc.status == 'OB' || doc.status == 'OC'">Discontinued</span>
+          </dd> 
           <dd class="py-3 px-4 w-1/4">
-            <a v-bind:href="doc.pdfUrl" class="text-brand-primary hover:underline" target="_blank">{{ doc.manualType }}</a>
+            {{ doc.manualType }}
           </dd> 
           <dd class="py-3 px-4 flex-grow">{{ doc.language }}</dd> 
+          <dd class="py-3 px-4 pr-10" >
+            <a v-bind:href="doc.pdfUrl" class="text-brand-primary p-2 py-1 rounded" target="_blank" title="Open Manual">
+              <i class="far fa-external-link"></i>
+            </a>
+          </dd>
         </dl>
       </div>
       <div v-if="zeroResults" class="py-12 fade-in">No results found</div>
       <div v-if="noManualTypeSelected" class="py-12 fade-in">Please select a manual type</div>
-      <div v-if="showSpinner" class="py-12 fade-in flex items-center justify-center text-gray-400">
+      <div v-if="showSpinner" class="py-12 fade-in flex items-center justify-center text-gray-400 z-page">
         <svg class="spinner stroke-current" width="28px" height="28px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
            <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
         </svg>
