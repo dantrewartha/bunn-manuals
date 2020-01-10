@@ -34,6 +34,9 @@ export default {
       this.isOpen = false;
     },
     inside: function(e) {
+      if ((e.target.tagName.toLowerCase() == 'span' || e.target.tagName.toLowerCase() == 'button') && this.isOpen) {
+        setTimeout(function () { document.body.click() }, 50)
+      }
       this.isOpen = true;
     },
     select: function() {
