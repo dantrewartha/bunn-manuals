@@ -96,7 +96,7 @@ export default {
   computed: {
     showSpinner: function () {
       var vm = this;
-      return vm.searching && vm.search.length;
+      return vm.searching && vm.search.length && !vm.docs.length;
     },
     zeroResults: function() {
       var vm = this;
