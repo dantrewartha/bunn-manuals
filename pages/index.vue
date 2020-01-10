@@ -171,7 +171,6 @@ export default {
     },
     updateDiscontintued: function() {
       var vm = this;
-      console.log(vm.status);
       vm.findDocs();
     },
     clearSearch: function() {
