@@ -169,18 +169,33 @@ export default {
       vm.lang = e.value;
       vm.findDocs();
     },
-    updateDiscontintued: function() {
+    updateDiscontintued: function(e) {
       var vm = this;
+      console.log(e.target.value);
+      vm.setCookie('searchPreferences', e.target.value, 2);
       vm.findDocs();
     },
     clearSearch: function() {
       var vm = this;
       vm.search = '';
     },
+    setCookie: function (cookieName, cookieValue, days) {
+      let date = new Date()
+      date.setTime(date.getTime() + (days*24*60*60*1000))
+      let expires = 'expires=' + date.toUTCString()
+      document.cookie = cookieName + '=' + cookieValue + ';' + expires + ';path=/'
+    },
+    readCookie: function(a) {
+      let b = document.cookie.match('(^|[^;]+)\\s*' + a + '\\s*=\\s*([^;]+)');
+      return b ? b.pop() : '';
+    }
   },
   mounted: function () {
     document.getElementById("searchInput").focus();
-  }
+    let cookie = this.readCookie('searchPreferences');
+    let array = cookie.split(',');
+    (!cookie) ? this.setCookie('searchPreferences', 'RL,RC,OB,OC', 2) : this.status = array;
+  },
 }
 </script>
 
