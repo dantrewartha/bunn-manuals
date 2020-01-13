@@ -1,17 +1,17 @@
 <template>
-  <div class="container px-6 max-w-7xl mx-auto">
+  <div class="container px-4 md:px-6 max-w-7xl mx-auto py-12 md:py-16 lg:py-24">
     <div class="w-full">
       <logo />
-      <h1 class="font-sans-light text-lg-3 my-8">Product Manuals</h1>
-      <div class="flex flex-col p-6 pt-3 bg-gray-100 border">
-        <div class="flex">
-          <div class="w-full w-auto">
+      <h1 class="font-sans-light text-lg-2 md:text-lg-3 my-4 md:my-8">Product Manuals</h1>
+      <!-- Search -->
+      <div class="flex flex-col lg:flex-row p-4 pt-2 md:p-6 md:pt-3 bg-gray-100 border">
+        <div class="flex flex-col md:flex-row flex-wrap w-full">
+          <div class="w-full w-auto lg:w-1/2 lg:pr-2">
             <div class="flex">
-              <label class="form-label cursor-pointer mr-3"><input type="radio" class="mr-1" v-bind:value="allModels" @change="updateDiscontintued" v-model="status" /> All</label>
-              <label class="form-label cursor-pointer mr-3"><input type="radio" class="mr-1" v-bind:value="currentModels" @change="updateDiscontintued" v-model="status" /> Current models</label>
-              <label class="form-label cursor-pointer mr-3"><input type="radio" class="mr-1" v-bind:value="discontinuedModels" @change="updateDiscontintued" v-model="status" /> Discontinued models</label>
+              <label class="form-label cursor-pointer mr-3"><input type="radio" class="mr-1 lg:mr-2" v-bind:value="allModels" @change="updateDiscontintued" v-model="status" /> All</label>
+              <label class="form-label cursor-pointer mr-3"><input type="radio" class="mr-1 lg:mr-2" v-bind:value="currentModels" @change="updateDiscontintued" v-model="status" /> Current<span class="hidden md:inline ml-1"> models</span></label>
+              <label class="form-label cursor-pointer"><input type="radio" class="mr-1 lg:mr-2" v-bind:value="discontinuedModels" @change="updateDiscontintued" v-model="status" /> Discontinued<span class="hidden md:inline ml-1"> models</span></label>
             </div>
-            
             <div class="relative">
               <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700 set-height" placeholder="Search by material number or product description" v-model.trim="search" />
               <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" @click="clearSearch()" v-if="search.length">
@@ -19,7 +19,7 @@
               </button>
             </div>
           </div>
-          <div class="w-full max-w-xs px-3">
+          <div class="w-full md:w-1/2 md:pr-2 lg:w-1/4 lg:pl-2">
             <label class="form-label">Manual Type(s)</label>
             <multi-select 
               v-bind:list-data="manualTypes" 
@@ -27,7 +27,7 @@
               @select="updateTypes">
             </multi-select>
           </div>
-          <div class="w-full md:w-84">
+          <div class="w-full md:w-1/2 md:pl-2 lg:w-1/4">
             <label class="form-label">Language</label>
             <radio-select 
               v-bind:list-data="languages"
@@ -37,20 +37,20 @@
           </div>
         </div>
       </div>
+      <!-- Results -->
       <div v-if="docs.length" class="fade-in">
-        <dl class="flex text-sm-1 font-sans-regular" v-for="(doc, index) in docs" v-bind:key="index" :class="{'bg-gray-100': index % 2, 'bg-white': !(index % 2)}">
-          <dd class="py-3 px-4 w-1/6">{{ doc.productNumber }}</dd> 
-          <dd class="py-3 px-4 w-2/5 text-left">
-            {{ doc.description }}
-            <span class="text-sm-3 font-sans-demi uppercase bg-avert-light text-avert py-1 px-2 rounded-full ml-2" v-if="doc.status == 'OB' || doc.status == 'OC'">Discontinued</span>
+        <dl class="flex flex-col lg:flex-row justify-around text-sm-1 font-sans-regular text-left lg:text-center p-3 px-4 relative" v-for="(doc, index) in docs" v-bind:key="index" :class="{'bg-gray-100': index % 2, 'bg-white': !(index % 2)}">
+          <dd class="lg:w-2/12">{{ doc.productNumber }}</dd> 
+          <dd class="lg:w-4/12 text-left font-sans-medium">
+            <span class="block md:inline">{{ doc.description }}</span>
+            <span class="inline-block text-sm-3 font-sans-demi uppercase bg-avert-light text-avert py-1 px-2 rounded-full -mx-1 my-1 md:my-0 md:mx-2" v-if="doc.status == 'OB' || doc.status == 'OC'">Discontinued</span>
           </dd> 
-          <dd class="py-3 px-4 w-1/4">
-            {{ doc.manualType }}
-          </dd> 
-          <dd class="py-3 px-4 flex-grow">{{ doc.language }}</dd> 
-          <dd class="py-3 px-4 pr-10" >
-            <a v-bind:href="doc.pdfUrl" class="text-brand-primary p-2 py-1 rounded" target="_blank" title="Open Manual">
-              <i class="far fa-external-link"></i>
+          <dd class="lg:w-3/12">{{ doc.manualType }}</dd> 
+          <dd class="lg:w-1/12">{{ doc.language }}</dd> 
+          <dd class="lg:w-2/12">
+            <a v-bind:href="doc.pdfUrl" class="" target="_blank" title="Open Manual">
+              View manual
+              <i class="far fa-external-link hidden"></i>
             </a>
           </dd>
         </dl>
@@ -211,16 +211,14 @@ body {
   transform: rotate(180deg);
 }
 .container {
-  margin: 0 auto;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items:flex-start;
   text-align: center;
-  @apply py-24;
 }
 .form-label {
-  @apply block font-sans-demi uppercase text-gray-500 text-sm-2 tracking-wide p-1 pt-3 text-left;
+  @apply flex items-center font-sans-demi uppercase text-gray-500 text-sm-2 tracking-wide p-1 py-2 text-left;
 }
 .fade-in {
 	-webkit-animation: fadein .5s linear;

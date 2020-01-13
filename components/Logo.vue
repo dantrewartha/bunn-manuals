@@ -1,5 +1,5 @@
 <template>
-<svg viewBox="0 0 232 45" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="w-48 mx-auto block BUNNlogo"><title>BUNN
+<svg viewBox="0 0 232 45" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="w-32 md:w-48 mx-auto block BUNNlogo"><title>BUNN
 	Logo Horizontal</title>
 	<defs>
 		<polygon id="path-1" points="0.024 44 231.914 44 231.914 0.0225945946 0.024 0.0225945946"></polygon>

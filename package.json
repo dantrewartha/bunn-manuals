@@ -16,6 +16,8 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^1.0.0",
-    "bunn-design-system": "git+https://github.com/BUNN-Digital/design-system.git#v0.8.69"
+    "bunn-design-system": "git+https://github.com/BUNN-Digital/design-system.git#v0.8.69",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.2"
   }
 }
