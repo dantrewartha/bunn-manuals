@@ -41,7 +41,7 @@
       <div v-if="docs.length" class="fade-in">
         <dl class="flex flex-col lg:items-center lg:flex-row justify-around text-sm-1 font-sans-regular text-left lg:text-center p-3 px-4 relative lg:py-0" v-for="(doc, index) in docs" v-bind:key="index" :class="{'bg-gray-100': index % 2, 'bg-white': !(index % 2)}">
           <dd class="lg:w-2/12">{{ doc.productNumber }}</dd> 
-          <dd class="lg:w-4/12 text-left font-sans-medium lg:h-12 lg:flex lg:items-center">
+          <dd class="lg:w-4/12 text-left font-sans-medium lg:font-sans-regular lg:h-12 lg:flex lg:items-center">
             <span class="block md:inline">{{ doc.description }}</span>
             <span class="inline-block text-sm-3 font-sans-demi uppercase bg-avert-light text-avert py-1 px-2 rounded-full -mx-1 my-1 md:my-0 md:mx-2" v-if="doc.status == 'OB' || doc.status == 'OC'">Discontinued</span>
           </dd> 
