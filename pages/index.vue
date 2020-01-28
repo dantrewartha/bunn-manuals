@@ -143,7 +143,7 @@ export default {
       var vm = this;
       vm.searching = true;
       vm.noResults = false;
-      if (vm.search.length > 2) {
+      if (vm.search.length > 1) {
         axios.post(process.env.apiUrl + '/docs', {
           query: vm.search,
           manualType: vm.type, 
