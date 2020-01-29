@@ -252,7 +252,7 @@ export default {
       document.getElementById("searchInput").focus();
       this.setCookie('tourComplete', 'true', 365)
     } else {
-      this.$tours['myTour'].start() 
+      // this.$tours['myTour'].start() 
     }
   },
 }
