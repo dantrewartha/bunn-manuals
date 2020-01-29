@@ -252,7 +252,7 @@ export default {
       document.getElementById("searchInput").focus();
       this.setCookie('tourComplete', 'true', 365)
     } else {
-      // this.$tours['myTour'].start() 
+      this.$tours['myTour'].start() 
     }
   },
 }
@@ -293,6 +293,12 @@ body {
   -webkit-filter: none !important;
   filter: none !important;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+.v-step__content {
+  margin: 0 0 1rem 0 !important;
+}
+.v-tour__target--relative {
+  position: relative !important;
 }
 .v-step .v-step__arrow {
   border-color: rgba(0,0,0,.6) !important; 
