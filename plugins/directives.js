@@ -1,4 +1,8 @@
 import Vue from 'vue';
+import VueTour from 'vue-tour';
+
+Vue.use(VueTour);
+require('vue-tour/dist/vue-tour.css');
 
 Vue.directive('click-outside', {
   bind: function(el, binding, vNode) {
@@ -25,3 +29,4 @@ Vue.directive('click-outside', {
 
   }
 })
+

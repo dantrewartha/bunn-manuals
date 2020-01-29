@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-on:click="inside" v-click-outside="outside">
-    <button class="bg-white border border-gray-200 rounded text-left w-full p-3 pr-8 text-gray-700 appearance-none focus:outline-none truncate leading-tight set-height">
+    <button class="bg-white border border-gray-200 rounded text-left w-full p-3 pr-8 text-gray-700 appearance-none truncate leading-tight set-height">
       <span>{{selected.label}}</span>
     </button>
     <div class="bg-white p-4 absolute w-full rounded border border-gray-200 z-shell" v-if="isOpen">
