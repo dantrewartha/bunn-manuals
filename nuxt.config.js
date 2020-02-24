@@ -48,8 +48,8 @@ export default {
     '@nuxtjs/proxy'
   ],
   axios: {
-    proxy: true,
-    proxyHeaders: true,
+    proxy: false,
+    proxyHeaders: false,
   },
   proxy: {
     '/api': {
@@ -70,7 +70,7 @@ export default {
 
     }
   },
-  // env: {
-  //   apiUrl: process.env.API_URL || 'http://localhost:4000',
-  // }
+  env: {
+    apiUrl: process.env.API_URL || 'http://localhost:4000',
+  }
 }
