@@ -45,6 +45,7 @@ export default {
   */
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/proxy'
   ],
   axios: {
     proxy: true
