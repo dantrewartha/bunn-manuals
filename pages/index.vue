@@ -179,7 +179,7 @@ export default {
       vm.searching = true;
       vm.noResults = false;
       if (vm.search.length > 1) {
-        this.$axios.post('/api/docs', {
+        this.$axios.post(process.env.apiUrl + '/docs', {
           query: vm.search,
           manualType: vm.type, 
           language: vm.lang,

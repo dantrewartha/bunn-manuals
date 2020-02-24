@@ -48,8 +48,8 @@ export default {
     '@nuxtjs/proxy'
   ],
   axios: {
-    baseUrl: process.env.API_URL,
-    browserUrl: ''
+    proxy: false,
+    proxyHeaders: false,
   },
   proxy: {
     '/api': {
