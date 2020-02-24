@@ -48,12 +48,12 @@ export default {
     '@nuxtjs/proxy'
   ],
   axios: {
-    proxy: true
+    proxy: true,
+    proxyHeaders: true,
   },
   proxy: {
     '/api': {
-      // target: process.env.API_URL || 'http://localhost:4000',
-      target: 'http://bunn-manuals.herokuapp.com/',
+      target: process.env.API_URL || 'http://localhost:4000',
       pathRewrite: {
         '^/api' : '/'
         }
