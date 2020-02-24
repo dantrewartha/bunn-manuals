@@ -74,7 +74,6 @@
 import Logo from '~/components/Logo.vue';
 import MultiSelect from '~/components/MultiSelect.vue';
 import RadioSelect from '~/components/RadioSelect.vue';
-import axios from 'axios';
 
 export default {
   components: { Logo, MultiSelect, RadioSelect },
@@ -180,7 +179,7 @@ export default {
       vm.searching = true;
       vm.noResults = false;
       if (vm.search.length > 1) {
-        axios.post(process.env.apiUrl + '/docs', {
+        this.$axios.post('/api/docs', {
           query: vm.search,
           manualType: vm.type, 
           language: vm.lang,

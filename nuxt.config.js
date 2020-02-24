@@ -1,6 +1,3 @@
-
-import axios from 'axios'
-
 export default {
   mode: 'spa',
   /*
@@ -47,7 +44,19 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/axios',
   ],
+  axios: {
+    proxy: true
+  },
+  proxy: {
+    '/api': {
+      target: process.env.API_URL || 'http://localhost:4000',
+      pathRewrite: {
+        '^/api' : '/'
+        }
+      }
+  },
   /*
   ** Build configuration
   */
@@ -59,7 +68,7 @@ export default {
 
     }
   },
-  env: {
-    apiUrl: process.env.API_URL || 'http://localhost:4000',
-  }
+  // env: {
+  //   apiUrl: process.env.API_URL || 'http://localhost:4000',
+  // }
 }
