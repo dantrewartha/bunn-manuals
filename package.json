@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.9.5",
+    "axios": "^0.19.2",
     "nuxt": "^2.0.0",
     "vue-tour": "^1.2.0"
   },
