@@ -51,7 +51,8 @@ export default {
   },
   proxy: {
     '/api': {
-      target: process.env.API_URL || 'http://localhost:4000',
+      // target: process.env.API_URL || 'http://localhost:4000',
+      target: 'http://bunn-manuals.herokuapp.com/',
       pathRewrite: {
         '^/api' : '/'
         }
