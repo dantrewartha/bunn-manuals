@@ -13,7 +13,7 @@
               <label class="form-label cursor-pointer"><input type="radio" class="mr-1 lg:mr-2" v-bind:value="discontinuedModels" @change="updateDiscontintued" v-model="status" /> Discontinued<span class="hidden md:inline ml-1"> models only</span></label>
             </div>
             <div class="relative">
-              <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700 set-height outline-none focus:shadow-outline" placeholder="Search by material number or product description" v-model.trim="search" />
+              <input type="text" id="searchInput" class="w-full py-3 px-4 border border-gray-200 rounded text-gray-700 set-height outline-none focus:shadow-outline" placeholder="Search by material number or product description" v-model.trim="search" data-hj-whitelist  />
               <button class="absolute p-3 px-4 right-0 top-0 bottom-0 text-gray-400" @click="clearSearch()" v-if="search.length">
                 <i class="fas fa-times-circle"></i>
               </button>
@@ -42,7 +42,7 @@
       <!-- Results -->
       <div v-if="docs.length" class="fade-in">
         <dl class="flex flex-col lg:items-center lg:flex-row text-sm-1 font-sans-regular text-left lg:text-center p-3 px-4 relative lg:py-0" v-for="(doc, index) in docs" v-bind:key="index" :class="{'bg-gray-100': index % 2, 'bg-white': !(index % 2)}">
-          <dd class="lg:w-2/12">{{ doc.productNumber }}</dd> 
+          <dd class="lg:w-2/12" data-hj-whitelist>{{ doc.productNumber }}</dd> 
           <dd class="lg:w-5/12 text-left font-sans-medium lg:font-sans-regular lg:h-12 lg:flex lg:items-center">
             <span class="block md:inline">{{ doc.description }}</span>
             <span class="inline-block text-sm-3 font-sans-demi uppercase bg-avert-light text-avert py-1 px-2 rounded-full -mx-1 my-1 md:my-0 md:mx-2" v-if="doc.status == 'OB' || doc.status == 'OC'">Discontinued</span>
